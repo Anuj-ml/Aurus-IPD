@@ -1,12 +1,12 @@
 import { Language } from '../types';
 export const SUPPORTED_LANGUAGES: Language[] = [
-  { code: 'hi-IN', label: 'Hindi', nativeLabel: '??????' },
-  { code: 'mr-IN', label: 'Marathi', nativeLabel: '?????' },
-  { code: 'ta-IN', label: 'Tamil', nativeLabel: '?????' },
-  { code: 'te-IN', label: 'Telugu', nativeLabel: '??????' },
-  { code: 'bn-IN', label: 'Bengali', nativeLabel: '?????' },
-  { code: 'gu-IN', label: 'Gujarati', nativeLabel: '???????' },
-  { code: 'kn-IN', label: 'Kannada', nativeLabel: '?????' },
+  { code: 'hi-IN', label: 'Hindi', nativeLabel: 'हिन्दी' },
+  { code: 'mr-IN', label: 'Marathi', nativeLabel: 'मराठी' },
+  { code: 'ta-IN', label: 'Tamil', nativeLabel: 'தமிழ்' },
+  { code: 'te-IN', label: 'Telugu', nativeLabel: 'తెలుగు' },
+  { code: 'bn-IN', label: 'Bengali', nativeLabel: 'বাংলা' },
+  { code: 'gu-IN', label: 'Gujarati', nativeLabel: 'ગુજરાતી' },
+  { code: 'kn-IN', label: 'Kannada', nativeLabel: 'ಕನ್ನಡ' },
   { code: 'en-IN', label: 'English', nativeLabel: 'English' }
 ];
 export const DEFAULT_AGENT_LANG: Language = { 
@@ -70,7 +70,11 @@ export class SpeechHandler {
     };
     this.recognition.onerror = (event: any) => {
       this._isListening = false;
-      if (onError) onError(event.error);
+      const errorMsg = event.error === 'not-allowed' 
+        ? "Microphone access denied. Please allow microphone permissions in your browser settings (click the lock icon in the URL bar)." 
+        : event.error;
+      console.error("Speech Recognition Error:", event.error);
+      if (onError) onError(errorMsg);
     };
     try {
       this._isListening = true;

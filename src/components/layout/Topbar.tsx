@@ -16,7 +16,7 @@ export default function Topbar() {
 
   const navItemClass = ({ isActive }: { isActive: boolean }) =>
     clsx(
-      "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 shadow-sm",
+      "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 shadow-sm whitespace-nowrap",
       isActive
         ? "bg-black text-white"
         : "bg-transparent text-gray-500 hover:text-black border border-transparent hover:border-gray-300 hover:bg-gray-100"
@@ -25,7 +25,7 @@ export default function Topbar() {
   return (
     <header className="flex items-center justify-between h-[80px] bg-transparent shrink-0 mb-4 px-2">
       {/* Top Left Logo Area */}
-      <div className="flex items-center gap-3 w-[250px]">
+      <div className="flex items-center gap-3 w-[200px]">
         <div className="flex items-center justify-center p-2 rounded-full border border-gray-300">
           <div className="w-4 h-4 rounded-sm bg-black rotate-45 transform"></div>
         </div>
@@ -35,18 +35,17 @@ export default function Topbar() {
       </div>
 
       {/* Center Navigation Pills */}
-      <nav className="flex items-center bg-white/60 p-1.5 rounded-full border border-gray-200 shadow-sm gap-1">
+      <nav className="flex items-center bg-white/60 p-1.5 rounded-full border border-gray-200 shadow-sm gap-1 overflow-visible">
         <NavLink to="/pulse" className={navItemClass}>
           <Activity className="w-4 h-4" />
           <span>Pulse</span>
         </NavLink>
         
-        <NavLink to="/resolve" className={clsx(navItemClass, "relative")}>
-          <Inbox className="w-4 h-4" />
-          <span>Resolve</span>
-          {unreadCount > 0 && (
-            <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-red-500 border border-white" />
-          )}
+        <NavLink to="/resolve" className={navItemClass}>
+          <div className="flex items-center gap-2 relative">
+            <Inbox className="w-4 h-4" />
+            <span>Resolve</span>
+          </div>
         </NavLink>
         
         <NavLink to="/assist" className={navItemClass}>
@@ -61,7 +60,7 @@ export default function Topbar() {
       </nav>
       
       {/* Right User & Search actions */}
-      <div className="flex items-center gap-4 w-[250px] justify-end">
+      <div className="flex items-center gap-4 w-[200px] justify-end">
         {/* Notifications pill */}
         <button className="relative flex items-center justify-center w-11 h-11 bg-white rounded-full border border-gray-200 shadow-sm text-gray-500 hover:text-black hover:border-gray-300 transition-colors">
           <Bell className="w-5 h-5" />

@@ -104,6 +104,10 @@ export default function AssistPage() {
       },
       (err) => {
         console.error("Mic error:", err);
+        // Only alert if it's a real error, not a standard 'no-speech' timeout
+        if (err !== 'no-speech') {
+          alert(err);
+        }
         setListeningTo(null);
         setInterimText('');
       }
@@ -228,82 +232,80 @@ export default function AssistPage() {
         </div>
 
         {/* Input Area */}
-        <div className="bg-white border-t border-gray-100 p-6">
-          <div className="flex bg-gray-100/50 rounded-xl p-1 w-fit mb-6 border border-gray-100">
-            <button onClick={() => setMode('voice')} className={`px-5 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'voice' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}>Voice</button>
-            <button onClick={() => setMode('text')} className={`px-5 py-2 text-sm font-bold rounded-lg transition-all ${mode === 'text' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}>Text</button>
+        <div className="bg-white border-t border-gray-100 px-6 py-4">
+          <div className="flex bg-gray-100/50 rounded-xl p-1 w-fit mb-4 border border-gray-100">
+            <button onClick={() => setMode('voice')} className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${mode === 'voice' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}>Voice</button>
+            <button onClick={() => setMode('text')} className={`px-4 py-1.5 text-xs font-bold rounded-lg transition-all ${mode === 'text' ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}>Text</button>
           </div>
 
           {mode === 'voice' ? (
-            <div className="flex gap-6 items-center justify-center py-6">
+            <div className="flex gap-4 items-center justify-center py-2">
               <button
                 onClick={() => toggleListen('customer')}
-                className={`flex flex-col items-center gap-3 p-8 rounded-[32px] transition-all w-56 ${
+                className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all flex-1 max-w-[280px] ${
                   listeningTo === 'customer' 
-                    ? 'bg-red-50 border-2 border-red-500 shadow-[0_0_0_8px_rgba(239,68,68,0.1)] scale-105' 
+                    ? 'bg-red-50 border-2 border-red-500 shadow-md scale-[1.02]' 
                     : 'bg-white border border-gray-200 shadow-sm hover:border-gray-300 hover:shadow-md'
                 }`}
               >
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${listeningTo === 'customer' ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30' : 'bg-gray-100 text-gray-400'}`}>
-                  <Mic size={32} />
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${listeningTo === 'customer' ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30' : 'bg-gray-100 text-gray-400'}`}>
+                  <Mic size={24} />
                 </div>
-                <div className="text-center">
-                  <div className="font-bold text-gray-900 text-lg">Customer</div>
-                  <div className="text-[13px] font-medium text-gray-500 mt-1">Speak in {SUPPORTED_LANGUAGES.find(l => l.code === customerLang)?.label}</div>
+                <div className="text-left overflow-hidden">
+                  <div className="font-bold text-gray-900 text-sm whitespace-nowrap">Customer</div>
+                  <div className="text-[11px] font-medium text-gray-500 mt-0.5 truncate uppercase tracking-wider">Speak in {SUPPORTED_LANGUAGES.find(l => l.code === customerLang)?.label}</div>
                 </div>
               </button>
 
-              <div className="w-14 h-14 rounded-full border-2 border-dashed border-gray-200 flex items-center justify-center text-gray-300">
-                ↔
-              </div>
+              <div className="text-gray-300 font-bold">VS</div>
 
               <button
                 onClick={() => toggleListen('agent')}
-                className={`flex flex-col items-center gap-3 p-8 rounded-[32px] transition-all w-56 ${
+                className={`flex items-center gap-4 px-6 py-4 rounded-2xl transition-all flex-1 max-w-[280px] ${
                   listeningTo === 'agent' 
-                    ? 'bg-red-50 border-2 border-red-500 shadow-[0_0_0_8px_rgba(239,68,68,0.1)] scale-105' 
+                    ? 'bg-red-50 border-2 border-red-500 shadow-md scale-[1.02]' 
                     : 'bg-[#FFF5F2] border border-[#FF5533]/20 shadow-sm hover:border-[#FF5533]/40 hover:shadow-md'
                 }`}
               >
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center ${listeningTo === 'agent' ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30' : 'bg-[#FF5533] text-white shadow-lg shadow-[#FF5533]/30'}`}>
-                  <Mic size={32} />
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${listeningTo === 'agent' ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30' : 'bg-[#FF5533] text-white shadow-lg shadow-[#FF5533]/30'}`}>
+                  <Mic size={24} />
                 </div>
-                <div className="text-center">
-                  <div className="font-bold text-gray-900 text-lg">You (Agent)</div>
-                  <div className="text-[13px] font-medium text-[#FF5533] mt-1">Speak in English</div>
+                <div className="text-left overflow-hidden">
+                  <div className="font-bold text-gray-900 text-sm whitespace-nowrap">You (Agent)</div>
+                  <div className="text-[11px] font-medium text-[#FF5533] mt-0.5 uppercase tracking-wider">Speak in English</div>
                 </div>
               </button>
             </div>
           ) : (
-            <div className="flex gap-6">
-              <div className="flex-1 flex flex-col gap-3">
+            <div className="flex gap-4">
+              <div className="flex-1 flex flex-col gap-2">
                 <textarea 
                   value={textInputCustomer}
                   onChange={e => setTextInputCustomer(e.target.value)}
                   placeholder={`Type in ${SUPPORTED_LANGUAGES.find(l => l.code === customerLang)?.label}...`}
-                  className="w-full h-32 p-4 rounded-2xl border border-gray-200 resize-none text-[15px] font-medium text-gray-700 bg-gray-50 outline-none focus:ring-2 focus:ring-[#FF5533]/20 focus:border-[#FF5533] shadow-inner"
+                  className="w-full h-24 p-3 rounded-xl border border-gray-200 resize-none text-sm font-medium text-gray-700 bg-gray-50 outline-none focus:ring-2 focus:ring-[#FF5533]/20 focus:border-[#FF5533] shadow-inner"
                 />
                 <button 
                   onClick={() => { handleTranslate(textInputCustomer, false); setTextInputCustomer(''); }}
                   disabled={!textInputCustomer.trim()}
-                  className="bg-gray-900 text-white py-3 rounded-xl text-sm font-bold hover:bg-black disabled:opacity-50 transition-all shadow-sm active:scale-95"
+                  className="bg-gray-900 text-white py-2.5 rounded-xl text-xs font-bold hover:bg-black disabled:opacity-50 transition-all shadow-sm active:scale-95"
                 >
                   Translate to English
                 </button>
               </div>
-              <div className="flex-1 flex flex-col gap-3">
+              <div className="flex-1 flex flex-col gap-2">
                 <textarea 
                   value={textInputAgent}
                   onChange={e => setTextInputAgent(e.target.value)}
                   placeholder="Type in English..."
-                  className="w-full h-32 p-4 rounded-2xl border border-[#FF5533]/20 resize-none text-[15px] font-medium text-gray-700 bg-[#FFF5F2] outline-none focus:ring-2 focus:ring-[#FF5533]/20 focus:border-[#FF5533] shadow-inner"
+                  className="w-full h-24 p-3 rounded-xl border border-[#FF5533]/20 resize-none text-sm font-medium text-gray-700 bg-[#FFF5F2] outline-none focus:ring-2 focus:ring-[#FF5533]/20 focus:border-[#FF5533] shadow-inner"
                 />
                 <button 
                   onClick={() => { handleTranslate(textInputAgent, true); setTextInputAgent(''); }}
                   disabled={!textInputAgent.trim()}
-                  className="bg-[#FF5533] text-white py-3 rounded-xl text-sm font-bold hover:bg-[#E64D2E] disabled:opacity-50 transition-all shadow-sm active:scale-95"
+                  className="bg-[#FF5533] text-white py-2.5 rounded-xl text-xs font-bold hover:bg-[#E64D2E] disabled:opacity-50 transition-all shadow-sm active:scale-95"
                 >
-                  Translate to Customer Language
+                  Translate to {SUPPORTED_LANGUAGES.find(l => l.code === customerLang)?.label}
                 </button>
               </div>
             </div>
